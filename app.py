@@ -114,24 +114,30 @@ function copiarRelatorio() {
 <label>Data</label>
 <input type="date" name="data" required>
 
-<label>Turno</label>
-<select name="turno" required>
-  <option value="">Selecione</option>
-  <option value="1º Turno">1º Turno</option>
-  <option value="2º Turno">2º Turno</option>
-  <option value="3º Turno">3º Turno</option>
-</select>
+<div>
+  <label>Turno</label>
+  <select name="turno" required>
+    <option>Selecione</option>
+    <option>1º Turno</option>
+    <option>2º Turno</option>
+    <option>3º Turno</option>
+  </select>
+</div>
 
-<label>Modelo</label>
-<select name="modelo" required>
-  <option value="">Selecione</option>
-  <option value="DAF">DAF</option>
-  <option value="Scania">Scania</option>
-  <option value="Volvo">Volvo</option>
-</select>
+<div>
+  <label>Modelo</label>
+  <select name="modelo" required>
+    <option>Selecione</option>
+    <option>Scania</option>
+    <option>DAF</option>
+    <option>Volvo</option>
+  </select>
+</div>
 
-<label>Bloco</label>
-<input type="text" name="bloco" required>
+<div>
+  <label>Bloco</label>
+  <input type="text" name="bloco">
+</div>
 
 <label>Total de peças</label>
 <input type="number" name="pecas" required>
