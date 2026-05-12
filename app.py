@@ -115,10 +115,20 @@ function copiarRelatorio() {
 <input type="date" name="data" required>
 
 <label>Turno</label>
-<input type="text" name="turno" placeholder="1º Turno" required>
+<select name="turno" required>
+  <option value="">Selecione</option>
+  <option value="1º Turno">1º Turno</option>
+  <option value="2º Turno">2º Turno</option>
+  <option value="3º Turno">3º Turno</option>
+</select>
 
 <label>Modelo</label>
-<input type="text" name="modelo" placeholder="DAF" required>
+<select name="modelo" required>
+  <option value="">Selecione</option>
+  <option value="DAF">DAF</option>
+  <option value="Scania">Scania</option>
+  <option value="Volvo">Volvo</option>
+</select>
 
 <label>Bloco</label>
 <input type="text" name="bloco" required>
@@ -170,8 +180,10 @@ Copiar Relatório
 """
 
 def plural(valor):
-
-    return "peça" if int(valor) == 1 else "peças"
+    try:
+        return "peça" if int(valor) == 1 else "peças"
+    except:
+        return "peças"
 
 @app.route("/", methods=["GET", "POST"])
 def home():
