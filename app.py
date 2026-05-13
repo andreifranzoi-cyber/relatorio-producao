@@ -1,5 +1,7 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, make_response
 from datetime import datetime
+from reportlab.pdfgen import canvas
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -17,9 +19,22 @@ HTML = """
 
 <script>
 function copiarRelatorio() {
+    const texto = document.getElementById("textoRelatorio").innerText;
+    navigator.clipboard.writeText(texto).then(() => {
+        alert("Relatório copiado!");
+    });
+}
+
+function copiarWhats() {
     let texto = document.getElementById("textoRelatorio").innerText;
+    texto = texto.replace(/\\n/g, "\\n");
     navigator.clipboard.writeText(texto);
-    alert("Relatório copiado!");
+    alert("Pronto para WhatsApp!");
+}
+
+function prepararPDF() {
+    const texto = document.getElementById("textoRelatorio").innerText;
+    document.getElementById("relatorioHidden").value = texto;
 }
 </script>
 
@@ -56,7 +71,6 @@ function copiarRelatorio() {
 <select name="modelo" required>
     <option disabled selected>Selecione</option>
     <option>Scania</option>
-    <option>Mercedes</option>
     <option>DAF</option>
     <option>Volvo</option>
 </select>
@@ -92,13 +106,24 @@ function copiarRelatorio() {
 </div>
 
 {% if relatorio %}
-<div class="relatorio" id="textoRelatorio">
+
+<pre class="relatorio" id="textoRelatorio">
 {{ relatorio }}
+</pre>
+
+<div class="botoes">
+
+<button onclick="copiarRelatorio()">📋 Copiar</button>
+
+<button onclick="copiarWhats()">📲 WhatsApp</button>
+
+<form action="/pdf" method="POST" onsubmit="prepararPDF()">
+    <input type="hidden" name="relatorio" id="relatorioHidden">
+    <button type="submit">📄 Exportar PDF</button>
+</form>
+
 </div>
 
-<button class="copy" onclick="copiarRelatorio()">
-Copiar Relatório
-</button>
 {% endif %}
 
 </div>
@@ -112,6 +137,7 @@ def plural(valor):
         return "peça" if int(valor) == 1 else "peças"
     except:
         return "peças"
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -143,7 +169,6 @@ def home():
 📋 RELATÓRIO DE PRODUÇÃO
 
 Área: {area}
-
 Responsável: {responsavel}
 
 📅 {data_formatada} — {turno}
@@ -165,6 +190,33 @@ Observações:
 
     return render_template_string(HTML, relatorio=relatorio)
 
+
+@app.route("/pdf", methods=["POST"])
+def gerar_pdf():
+
+    texto = request.form["relatorio"]
+
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer)
+
+    y = 800
+
+    for linha in texto.split("\n"):
+        pdf.drawString(50, y, linha[:100])
+        y -= 15
+        if y < 50:
+            pdf.showPage()
+            y = 800
+
+    pdf.save()
+    buffer.seek(0)
+
+    response = make_response(buffer.read())
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "attachment; filename=relatorio.pdf"
+
+    return response
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
     app.run(debug=True)
