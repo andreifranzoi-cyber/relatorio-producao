@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string, make_response
+from flask import Flask, request, render_template_string
 from datetime import datetime
 
 app = Flask(__name__)
@@ -27,14 +27,6 @@ function copiarWhats() {
     navigator.clipboard.writeText(texto);
     alert("Pronto para WhatsApp!");
 }
-
-// garante envio correto pro PDF
-document.addEventListener("submit", function () {
-    const el = document.getElementById("textoRelatorio");
-    if (el) {
-        document.getElementById("relatorioHidden").value = el.innerText;
-    }
-});
 </script>
 
 </head>
@@ -112,14 +104,9 @@ document.addEventListener("submit", function () {
 
 <div class="botoes">
 
-<button onclick="copiarRelatorio()">📋 Copiar</button>
+<button onclick="copiarRelatorio()">📋 Copiar Relatório</button>
 
-<button onclick="copiarWhats()">📲 WhatsApp</button>
-
-<form action="/pdf" method="POST">
-    <input type="hidden" name="relatorio" id="relatorioHidden">
-    <button type="submit">📄 Exportar PDF</button>
-</form>
+<button onclick="copiarWhats()">📲 Copiar WhatsApp</button>
 
 </div>
 
@@ -188,35 +175,6 @@ Observações:
 """
 
     return render_template_string(HTML, relatorio=relatorio)
-
-
-@app.route("/pdf", methods=["POST"])
-def gerar_pdf():
-
-    texto = request.form.get("relatorio", "")
-
-    if not texto:
-        return "Relatório vazio", 400
-
-    # PDF simples (HTML -> PDF estilo texto)
-    html_pdf = f"""
-    <html>
-    <head>
-    <meta charset="utf-8">
-    </head>
-    <body>
-    <pre style="font-size:14px; font-family:Arial;">
-{texto}
-    </pre>
-    </body>
-    </html>
-    """
-
-    response = make_response(html_pdf)
-    response.headers["Content-Type"] = "application/pdf"
-    response.headers["Content-Disposition"] = "attachment; filename=relatorio.pdf"
-
-    return response
 
 
 if __name__ == "__main__":
