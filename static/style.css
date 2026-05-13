@@ -16,7 +16,7 @@ h1 {
 }
 
 .card {
-    background: #fff;
+    background: white;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -38,6 +38,7 @@ input, select, textarea {
 }
 
 button {
+    width: 100%;
     padding: 10px;
     margin-top: 10px;
     border: none;
@@ -45,7 +46,6 @@ button {
     cursor: pointer;
     background: #1f3b57;
     color: white;
-    width: 100%;
 }
 
 button:hover {
@@ -59,7 +59,6 @@ button:hover {
     border-radius: 10px;
     white-space: pre-line;
     font-family: monospace;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
 .botoes {
