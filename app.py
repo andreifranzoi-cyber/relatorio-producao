@@ -1,7 +1,5 @@
 from flask import Flask, request, render_template_string, make_response
 from datetime import datetime
-from reportlab.pdfgen import canvas
-from io import BytesIO
 
 app = Flask(__name__)
 
@@ -21,7 +19,7 @@ HTML = """
 function copiarRelatorio() {
     const texto = document.getElementById("textoRelatorio").innerText;
     navigator.clipboard.writeText(texto);
-    alert("Copiado!");
+    alert("Relatório copiado!");
 }
 
 function copiarWhats() {
@@ -30,6 +28,7 @@ function copiarWhats() {
     alert("Pronto para WhatsApp!");
 }
 
+// garante envio correto pro PDF
 document.addEventListener("submit", function () {
     const el = document.getElementById("textoRelatorio");
     if (el) {
@@ -119,7 +118,7 @@ document.addEventListener("submit", function () {
 
 <form action="/pdf" method="POST">
     <input type="hidden" name="relatorio" id="relatorioHidden">
-  
+    <button type="submit">📄 Exportar PDF</button>
 </form>
 
 </div>
@@ -196,26 +195,24 @@ def gerar_pdf():
 
     texto = request.form.get("relatorio", "")
 
-    buffer = BytesIO()
-    pdf = canvas.Canvas(buffer)
+    if not texto:
+        return "Relatório vazio", 400
 
-    y = 800
+    # PDF simples (HTML -> PDF estilo texto)
+    html_pdf = f"""
+    <html>
+    <head>
+    <meta charset="utf-8">
+    </head>
+    <body>
+    <pre style="font-size:14px; font-family:Arial;">
+{texto}
+    </pre>
+    </body>
+    </html>
+    """
 
-    # limpa emojis que quebram o PDF
-    texto_limpo = texto.encode("ascii", "ignore").decode()
-
-    for linha in texto_limpo.split("\n"):
-        pdf.drawString(50, y, linha)
-        y -= 15
-
-        if y < 50:
-            pdf.showPage()
-            y = 800
-
-    pdf.save()
-    buffer.seek(0)
-
-    response = make_response(buffer.read())
+    response = make_response(html_pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = "attachment; filename=relatorio.pdf"
 
