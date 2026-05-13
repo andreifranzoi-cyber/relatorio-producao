@@ -20,22 +20,22 @@ HTML = """
 <script>
 function copiarRelatorio() {
     const texto = document.getElementById("textoRelatorio").innerText;
-    navigator.clipboard.writeText(texto).then(() => {
-        alert("Relatório copiado!");
-    });
+    navigator.clipboard.writeText(texto);
+    alert("Copiado!");
 }
 
 function copiarWhats() {
-    let texto = document.getElementById("textoRelatorio").innerText;
-    texto = texto.replace(/\\n/g, "\\n");
+    const texto = document.getElementById("textoRelatorio").innerText;
     navigator.clipboard.writeText(texto);
     alert("Pronto para WhatsApp!");
 }
 
-function prepararPDF() {
-    const texto = document.getElementById("textoRelatorio").innerText;
-    document.getElementById("relatorioHidden").value = texto;
-}
+document.addEventListener("submit", function () {
+    const el = document.getElementById("textoRelatorio");
+    if (el) {
+        document.getElementById("relatorioHidden").value = el.innerText;
+    }
+});
 </script>
 
 </head>
@@ -117,9 +117,9 @@ function prepararPDF() {
 
 <button onclick="copiarWhats()">📲 WhatsApp</button>
 
-<form action="/pdf" method="POST" onsubmit="prepararPDF()">
+<form action="/pdf" method="POST">
     <input type="hidden" name="relatorio" id="relatorioHidden">
-    <button type="submit">📄 Exportar PDF</button>
+  
 </form>
 
 </div>
@@ -194,16 +194,20 @@ Observações:
 @app.route("/pdf", methods=["POST"])
 def gerar_pdf():
 
-    texto = request.form["relatorio"]
+    texto = request.form.get("relatorio", "")
 
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer)
 
     y = 800
 
-    for linha in texto.split("\n"):
-        pdf.drawString(50, y, linha[:100])
+    # limpa emojis que quebram o PDF
+    texto_limpo = texto.encode("ascii", "ignore").decode()
+
+    for linha in texto_limpo.split("\n"):
+        pdf.drawString(50, y, linha)
         y -= 15
+
         if y < 50:
             pdf.showPage()
             y = 800
