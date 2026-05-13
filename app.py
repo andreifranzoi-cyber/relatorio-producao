@@ -4,7 +4,6 @@ from datetime import datetime
 app = Flask(__name__)
 
 HTML = """
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -15,20 +14,13 @@ HTML = """
 <title>Relatório Produção</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
 
 <script>
-
 function copiarRelatorio() {
-
     let texto = document.getElementById("textoRelatorio").innerText;
-
     navigator.clipboard.writeText(texto);
-
     alert("Relatório copiado!");
-
 }
-
 </script>
 
 </head>
@@ -39,10 +31,12 @@ function copiarRelatorio() {
 
 <h1>📋 Gerador de Relatório</h1>
 
+<div class="card">
+
 <form method="POST">
 
 <label>Área</label>
-<input type="text" name="area" placeholder="Referenciadora" required>
+<input type="text" name="area" required>
 
 <label>Responsável</label>
 <input type="text" name="responsavel" required>
@@ -50,30 +44,25 @@ function copiarRelatorio() {
 <label>Data</label>
 <input type="date" name="data" required>
 
-<div>
-  <label>Turno</label>
-  <select name="turno" required>
-    <option>Selecione</option>
+<label>Turno</label>
+<select name="turno" required>
+    <option disabled selected>Selecione</option>
     <option>1º Turno</option>
     <option>2º Turno</option>
     <option>3º Turno</option>
-  </select>
-</div>
+</select>
 
-<div>
-  <label>Modelo</label>
-  <select name="modelo" required>
-    <option>Selecione</option>
+<label>Modelo</label>
+<select name="modelo" required>
+    <option disabled selected>Selecione</option>
     <option>Scania</option>
+    <option>Mercedes</option>
     <option>DAF</option>
     <option>Volvo</option>
-  </select>
-</div>
+</select>
 
-<div>
-  <label>Bloco</label>
-  <input type="text" name="bloco">
-</div>
+<label>Bloco</label>
+<input type="text" name="bloco">
 
 <label>Total de peças</label>
 <input type="number" name="pecas" required>
@@ -96,14 +85,13 @@ function copiarRelatorio() {
 <label>Observações</label>
 <textarea name="observacoes" rows="4"></textarea>
 
-<button type="submit">
-Gerar Relatório
-</button>
+<button type="submit">Gerar Relatório</button>
 
 </form>
 
-{% if relatorio %}
+</div>
 
+{% if relatorio %}
 <div class="relatorio" id="textoRelatorio">
 {{ relatorio }}
 </div>
@@ -111,14 +99,12 @@ Gerar Relatório
 <button class="copy" onclick="copiarRelatorio()">
 Copiar Relatório
 </button>
-
 {% endif %}
 
 </div>
 
 </body>
 </html>
-
 """
 
 def plural(valor):
@@ -138,11 +124,7 @@ def home():
         responsavel = request.form["responsavel"]
 
         data_original = request.form["data"]
-
-        data_formatada = datetime.strptime(
-            data_original,
-            "%Y-%m-%d"
-        ).strftime("%d/%m/%Y")
+        data_formatada = datetime.strptime(data_original, "%Y-%m-%d").strftime("%d/%m/%Y")
 
         turno = request.form["turno"]
         modelo = request.form["modelo"]
@@ -157,7 +139,7 @@ def home():
         paradas = request.form["paradas"]
         observacoes = request.form["observacoes"]
 
-        relatorio = f'''
+        relatorio = f"""
 📋 RELATÓRIO DE PRODUÇÃO
 
 Área: {area}
@@ -169,7 +151,6 @@ Responsável: {responsavel}
 Bloco {modelo} — {bloco}
 
 • Total de peças: {pecas} {plural(pecas)}
-
 • Solda: {solda} {plural(solda)}
 • Refugo: {refugo} {plural(refugo)}
 • Recuperação: {recuperacao} {plural(recuperacao)}
@@ -180,12 +161,10 @@ Paradas:
 
 Observações:
 {observacoes}
-'''
+"""
 
-    return render_template_string(
-        HTML,
-        relatorio=relatorio
-    )
+    return render_template_string(HTML, relatorio=relatorio)
 
 if __name__ == "__main__":
+    app.run(debug=True)
     app.run(debug=True)
