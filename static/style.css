@@ -1,9 +1,8 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: #f4f6f9;
     margin: 0;
     padding: 20px;
-    color: #333;
 }
 
 .container {
@@ -36,23 +35,17 @@ input, select, textarea {
     margin-top: 5px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    outline: none;
-}
-
-input:focus, select:focus, textarea:focus {
-    border-color: #1f3b57;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    background: #1f3b57;
-    color: white;
+    padding: 10px;
+    margin-top: 10px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    margin-top: 15px;
-    font-size: 16px;
+    background: #1f3b57;
+    color: white;
+    width: 100%;
 }
 
 button:hover {
@@ -61,14 +54,16 @@ button:hover {
 
 .relatorio {
     margin-top: 20px;
-    background: #ffffff;
+    background: white;
     padding: 20px;
     border-radius: 10px;
     white-space: pre-line;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     font-family: monospace;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-.copy {
-    margin-top: 10px;
+.botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
