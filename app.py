@@ -14,72 +14,8 @@ HTML = """
 
 <title>Relatório Produção</title>
 
-<style>
-
-body{
-    font-family: Arial;
-    background:#f0f2f5;
-    padding:20px;
-}
-
-.container{
-    max-width:650px;
-    margin:auto;
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-h1{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-label{
-    font-weight:bold;
-}
-
-input, textarea{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
-    margin-bottom:15px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    padding:14px;
-    border:none;
-    background:#0b57d0;
-    color:white;
-    font-size:16px;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:0.9;
-}
-
-.relatorio{
-    margin-top:30px;
-    background:#fafafa;
-    border-left:5px solid #0b57d0;
-    padding:20px;
-    border-radius:8px;
-    white-space:pre-line;
-}
-
-.copy{
-    margin-top:15px;
-    background:#16a34a;
-}
-
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
 <script>
 
